@@ -1,3 +1,4 @@
 node_modules
+migrations
+*.code-workspace
 .env
-
