@@ -1,15 +1,3 @@
-export interface Post {
-  id: number;
-  title: string;
-  body: string;
-  published: boolean;
-}
+import { PrismaClient } from "@prisma/client";
 
-export interface Db {
-  posts: Post[];
-}
-
-export const db: Db = {
-  //posts: [{ id: 1, title: "Nexus", body: "...1", published: false }],
-  posts: [],
-};
+export const db = new PrismaClient();

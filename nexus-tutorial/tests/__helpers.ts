@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { ServerInfo } from "apollo-server";
-import getPort, { makeRange } from "get-port";
+import getPort = require("get-port");
 import { GraphQLClient } from "graphql-request";
 import { server } from "../api/server";
 
@@ -32,7 +31,7 @@ function graphqlTestContext() {
 
   return {
     async before() {
-      const port = await getPort({ port: makeRange(4000, 6000) });
+      const port = await getPort({ port: getPort.makeRange(4000, 6000) });
       serverInstance = await server.listen({ port });
 
       return new GraphQLClient(`http://localhost:${port}`);
