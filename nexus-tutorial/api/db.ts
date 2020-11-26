@@ -10,5 +10,6 @@ export interface Db {
 }
 
 export const db: Db = {
-  posts: [{ id: 1, title: "Nexus", body: "...1", published: false }],
+  //posts: [{ id: 1, title: "Nexus", body: "...1", published: false }],
+  posts: [],
 };

@@ -5,7 +5,20 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --no-notify api/app.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "generate": "ts-node-dev api/schema.ts",
+    "test": "npm run generate"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +29,9 @@
     "graphql": "^15.4.0"
   },
   "devDependencies": {
+    "@prisma/client": "^2.12.1",
     "@types/jest": "^26.0.15",
+    "get-port": "^5.1.1",
     "graphql-request": "^3.3.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.4.4",
