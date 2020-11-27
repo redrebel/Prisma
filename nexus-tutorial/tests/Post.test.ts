@@ -3,6 +3,42 @@ import { createTestContext } from "./__helpers";
 const ctx = createTestContext();
 
 it("ensures that a draft can be created and published", async () => {
+  const persistedData = await ctx.db.post.findMany();
+  expect(persistedData).toMatchInlineSnapshot(`
+ Array [
+   Object {
+     "body": "...",
+     "id": 1,
+     "published": true,
+     "title": "Nexus",
+   },
+ ]
+`);
+  /*const postsResult = await ctx.client.request(
+    `
+    {
+      posts{
+        id
+        title
+        body
+        published
+      }
+    }`
+  );
+  console.log(postsResult);
+  expect(postsResult).toMatchInlineSnapshot(
+    `Object {
+  "posts": Array [
+    Object {
+      "body": null,
+      "id": 1,
+      "published": true,
+      "title": "Hello World",
+    },
+  ],
+}`
+  );*/
+  /*
   // Create a new draft
   const draftResult = await ctx.client.request(`
   mutation {
@@ -49,5 +85,5 @@ it("ensures that a draft can be created and published", async () => {
        "body": "...",
        "published": true,
      },
-   }`);
+   }`);*/
 });
