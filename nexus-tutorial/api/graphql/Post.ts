@@ -1,4 +1,10 @@
-import { objectType, extendType, nonNull, stringArg, intArg } from "@nexus/schema";
+import {
+  objectType,
+  extendType,
+  nonNull,
+  stringArg,
+  intArg,
+} from "@nexus/schema";
 import { addResolveFunctionsToSchema } from "apollo-server";
 
 export const Post = objectType({
@@ -17,19 +23,17 @@ export const PostQuery = extendType({
     t.nonNull.list.field("drafts", {
       type: "Post",
       resolve(_root, _args, ctx) {
-        return ctx.db.posts.filter(p => p.published === false)
+        return ctx.db.post.findMany({ where: { published: false } });
       },
-    }),
+    });
     t.list.field("posts", {
       type: "Post",
-      resolve(_root, _args, ctx){
-        return ctx.db.posts.filter(p => p.published === true)
-      }
-    })
-    ;
+      resolve(_root, _args, ctx) {
+        return ctx.db.post.findMany({ where: { published: true } });
+      },
+    });
   },
 });
-
 
 export const PostMutation = extendType({
   type: "Mutation",
@@ -40,34 +44,28 @@ export const PostMutation = extendType({
         title: nonNull(stringArg()),
         body: nonNull(stringArg()),
       },
-      resolve(_root, args, ctx){
+      resolve(_root, args, ctx) {
         const draft = {
-          id: ctx.db.posts.length + 1,
           title: args.title,
           body: args.body,
           published: false,
-        }
-        ctx.db.posts.push(draft);
-        return draft;
-      }
-    }),
-    t.field("publish", {
-      type: "Post",
-      args: {
-        draftId: nonNull(intArg()),
+        };
+        return ctx.db.post.create({ data: draft });
       },
-      resolve(_root, args, ctx){
-        let draftToPublish = ctx.db.posts.find(p => p.id === args.draftId)
-
-        if(!draftToPublish){
-          throw new Error("Could not find draft with id " + args.draftId)
-        }
-
-        draftToPublish.published = true;
-
-        return draftToPublish;
-      }
-    })
-  }
-
-})
+    }),
+      t.field("publish", {
+        type: "Post",
+        args: {
+          draftId: nonNull(intArg()),
+        },
+        resolve(_root, args, ctx) {
+          return ctx.db.post.update({
+            where: { id: args.draftId },
+            data: {
+              published: true,
+            },
+          });
+        },
+      });
+  },
+});
