@@ -2,7 +2,7 @@ import { createTestContext } from "./__helpers";
 
 const ctx = createTestContext();
 
-it("ensure that a fraft can be created and published", async () => {
+it("ensure that a draft can be created and published", async () => {
   // Create a new draft
   const draftResult = await ctx.client.request(`
     mutation {
@@ -40,14 +40,27 @@ it("ensure that a fraft can be created and published", async () => {
     { draftId: draftResult.createDraft.id }
   );
 
-  expect(draftResult).toMatchInlineSnapshot(`
+  expect(publishResult).toMatchInlineSnapshot(`
     Object {
-      "createDraft": Object {
+      "publish": Object {
         "body": "...",
         "id": 1,
-        "published": false,
+        "published": true,
         "title": "Nexus",
       },
     }
+  `);
+
+  const persistedData = await ctx.db.post.findMany();
+
+  expect(persistedData).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "body": "...",
+        "id": 1,
+        "published": true,
+        "title": "Nexus",
+      },
+    ]
   `);
 });
